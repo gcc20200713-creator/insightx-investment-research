@@ -2,7 +2,7 @@ import report from '@/data/catl-annual-report-2025.json';
 import {billion,reportUrl,type DataResult,yoy} from './finance';
 
 export type Evidence={id:string;question:string;stance:'support'|'against'|'unknown';title:string;detail:string;interpretation:string;source:string;url:string;page:number;period:string;kind:'原始披露'|'程序计算'|'待验证';};
-export type Research={supported:boolean;claim:string;clarification:string;questions:string[];modelUsed?:boolean;modelStatus?:'not_configured'|'success'|'failed'|'not_applicable';modelNotice?:string;tasks:{skill:string;status:'done'|'skipped';detail:string}[];evidence:Evidence[];conclusion:string;conflict:string;limitations:string[];changeConditions:string[];metrics:{name:string;previous:number;current:number;unit:string}[];};
+export type Research={supported:boolean;claim:string;clarification:string;questions:string[];modelUsed?:boolean;modelRun?:{provider:string;model:string;startedAt:string;durationMs:number;httpStatus?:number;responseId?:string};modelStatus?:'not_configured'|'success'|'failed'|'not_applicable';modelNotice?:string;tasks:{skill:string;status:'done'|'skipped';detail:string}[];evidence:Evidence[];conclusion:string;conflict:string;limitations:string[];changeConditions:string[];metrics:{name:string;previous:number;current:number;unit:string}[];};
 const link=(page:number)=>`${reportUrl}#page=${page}`;
 const ev=(id:string,question:string,stance:Evidence['stance'],title:string,detail:string,interpretation:string,page:number,kind:Evidence['kind']='程序计算'):Evidence=>({id,question,stance,title,detail,interpretation,source:report.sourceName,url:link(page),page,period:'2024—2025 年度',kind});
 

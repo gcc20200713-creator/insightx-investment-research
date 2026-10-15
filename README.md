@@ -6,7 +6,7 @@
 
 首页输入或修改命题 → 服务端分析范围并生成澄清及四问 → 用户确认检验口径 → 工作台查看数据状态、六项步骤和证据 → 报告查看冲突、边界与结论变化条件 → 在已有证据范围追问、比较与保存。任务保存在当前浏览器 localStorage；刷新首页可直接打开，不支持跨设备同步。
 
-Next.js 15、React 19、TypeScript。主流程在 `POST /api/research` 中顺序执行：命题澄清、问题拆解、工具检索、数据校验、证据分析、结论生成。前两项默认是规则解析；配置 `OPENAI_API_KEY` 时尝试用 Responses API 生成结构化澄清和四问，通过格式校验后采用。模型失败时显示原因并降级规则结果。后四项是服务端代码和年报数据处理，数字、分类、结论不由模型生成。追问是现有证据的关键词查询，不是新一轮模型推理或检索。页面只展示实际执行状态。
+Next.js 15、React 19、TypeScript。主流程在 `POST /api/research` 中顺序执行：命题澄清、问题拆解、工具检索、数据校验、证据分析、结论生成。前两项默认是规则解析；配置百炼北京地域 `DASHSCOPE_API_KEY`、`AI_PROVIDER=dashscope` 时，通过千问 Chat Completions JSON 模式生成澄清和四问；也保留 OpenAI Responses API 分支。通过结构与数字约束校验后采用。模型失败时显示原因并降级规则结果。后四项是服务端代码和年报数据处理，数字、分类、结论不由模型生成。追问是现有证据的关键词查询，不是新一轮模型推理或检索。页面只展示实际执行状态。
 
 ## 数据与来源
 
@@ -19,10 +19,14 @@ Next.js 15、React 19、TypeScript。主流程在 `POST /api/research` 中顺序
 
 需要 Node.js 20 以上。在项目目录执行 `npm install`，再执行 `npm run dev`，浏览器打开 `http://localhost:3000`。不配置密钥可运行带明确标签的年报历史案例。运行 `npm test` 和 `npm run build` 检查逻辑与构建。
 
-如有密钥，将 `.env.example` 复制为 `.env.local`，仅在本机填 `FUYAO_API_KEY`、可选 `OPENAI_API_KEY`，重启开发服务。线上通过站点管理页面的服务端环境变量配置同名值，重新部署并测试。不要在聊天、仓库、前端代码或截图中放密钥；变量不带 `NEXT_PUBLIC_` 前缀。`.env*` 被 Git 忽略，只有 `.env.example` 可提交。API 不返回密钥。
+如有密钥，将 `.env.example` 复制为 `.env.local`，仅在本机填 `FUYAO_API_KEY`，以及 `DASHSCOPE_API_KEY`（北京地域）、`AI_PROVIDER=dashscope`、`DASHSCOPE_MODEL=qwen-plus`；OpenAI 为可选分支，重启开发服务。线上通过站点管理页面的服务端环境变量配置同名值，重新部署并测试。不要在聊天、仓库、前端代码或截图中放密钥；变量不带 `NEXT_PUBLIC_` 前缀。`.env*` 被 Git 忽略，只有 `.env.example` 可提交。API 不返回密钥。
 
 ## 接口与验证
 
 `GET /api/financials` 返回数据模式、来源、时间、记录和接口状态。`POST /api/research` 接收 `{ "claim": "..." }`，返回研究结构和本次财务数据状态。详见 [TESTING.md](TESTING.md)、[AI_USAGE.md](AI_USAGE.md) 与 [DEMO_SCRIPT.md](DEMO_SCRIPT.md)。
+
+百炼北京地域部署步骤见 [DEPLOYMENT.md](DEPLOYMENT.md)。调用记录包含提供方、模型、请求时间、HTTP状态、耗时和响应ID，不含密钥。配置完成前不声称真实模型调用成功。
+
+源码仓库：[insightx-investment-research](https://github.com/gcc20200713-creator/insightx-investment-research)。
 
 当前边界：仅单一标的和年度案例；财务 API 和模型 API 的真实线上调用尚待服务端密钥；没有跨设备保存、完整利润桥接或泛化 Agent 工具规划。GitHub 仓库状态以交付清单为准。
