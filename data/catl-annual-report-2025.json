@@ -1,0 +1,20 @@
+{
+  "sourceType": "annual-report-transcription",
+  "sourceName": "宁德时代新能源科技股份有限公司2025年年度报告",
+  "sourceUrl": "https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF",
+  "publishedDate": "2026-03-10",
+  "recordedAt": "2026-10-15",
+  "unit": "CNY thousand",
+  "note": "人工从年报摘录的历史数据，不是扶摇API原始响应；年报纸面页码11及117。",
+  "records": [
+    {"fiscalYear":2025,"operatingIncome":423701834,"operatingProfit":89518636,"parentNetProfit":72201282,"adjustedParentNetProfit":64507864,"page":{"operatingIncome":11,"operatingProfit":117,"parentNetProfit":11,"adjustedParentNetProfit":11}},
+    {"fiscalYear":2024,"operatingIncome":362012554,"operatingProfit":64051799,"parentNetProfit":50744682,"adjustedParentNetProfit":44992919,"page":{"operatingIncome":11,"operatingProfit":117,"parentNetProfit":11,"adjustedParentNetProfit":11}}
+  ],
+  "additional": {
+    "nonRecurringNetProfit": {"2025":7693417,"2024":5751762,"page":12},
+    "mainBusinessRevenue": {"2025":406785222,"2024":344524735,"page":195},
+    "mainBusinessCost": {"2025":308033498,"2024":265082813,"page":195},
+    "nonRecurringDescription": "2025年其他符合非经常性损益定义的损益项目主要是部分股权投资持股比例变动产生的投资收益及其他收益等。",
+    "nonRecurringDescriptionPage": 13
+  }
+}

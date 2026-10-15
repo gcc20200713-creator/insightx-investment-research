@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import report from '../data/catl-annual-report-2025.json';
+import {analyzeClaim} from '../lib/research';
+import {enhanceWithModel} from '../lib/ai';
+import type {DataResult} from '../lib/finance';
+const data:DataResult={mode:'historical',sourceName:report.sourceName,sourceUrl:report.sourceUrl,observedAt:report.recordedAt,reportPeriod:'2024–2025',notice:report.note,records:report.records,apiAttempt:'not_configured'};
+test('optional model can rephrase but cannot alter evidence or numeric conclusion',async()=>{const key=process.env.OPENAI_API_KEY,original=globalThis.fetch;process.env.OPENAI_API_KEY='test-only';globalThis.fetch=async()=>new Response(JSON.stringify({output:[{content:[{type:'output_text',text:JSON.stringify({clarification:'检验宁德时代2025年相对2024年的利润来源',questions:['利润如何变化？','扣非贡献多少？','主营毛利如何变化？','一次性收益贡献多少？']})}]}]}));try{const baseline=analyzeClaim('宁德时代2025年利润增长主要来自主营业务改善，而不是一次性收益。',data);const result=await enhanceWithModel(baseline);assert.equal(result.modelUsed,true);assert.deepEqual(result.evidence,baseline.evidence);assert.equal(result.conclusion,baseline.conclusion);assert.match(result.clarification,/超过50%/)}finally{globalThis.fetch=original;if(key===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=key}});
+test('model HTTP error is visibly marked as rule fallback',async()=>{const key=process.env.OPENAI_API_KEY,original=globalThis.fetch;process.env.OPENAI_API_KEY='test-only';globalThis.fetch=async()=>new Response('unavailable',{status:503});try{const baseline=analyzeClaim('宁德时代2025年利润增长主要来自主营业务改善，而不是一次性收益。',data);const result=await enhanceWithModel(baseline);assert.equal(result.modelStatus,'failed');assert.match(result.modelNotice??'',/HTTP 503.*规则结果/);assert.deepEqual(result.evidence,baseline.evidence)}finally{globalThis.fetch=original;if(key===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=key}});
