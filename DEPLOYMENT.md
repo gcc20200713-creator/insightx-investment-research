@@ -2,7 +2,7 @@
 
 现有源码仓库：https://github.com/gcc20200713-creator/insightx-investment-research
 
-代码已支持阿里云百炼华北2（北京）千问。默认模型 `qwen-plus`，固定服务端端点 `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`。不能把其他地域的Key混用。当前尚未取得用户密钥，真实模型调用没有完成。
+代码已支持阿里云百炼华北2（北京）千问。默认模型 `qwen-plus`，固定服务端端点 `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`。不能把其他地域的Key混用。用户已在 Vercel 生产环境亲自配置密钥；2026-10-15 扶摇与千问真实调用均成功，见 TESTING.md。
 
 ## Vercel 网页部署（无需插件）
 
@@ -27,6 +27,8 @@
 - 扶摇只有本次接口成功才显示「本次接口调用」，无Key或失败必须显示「历史数据」。
 - 大模型真实HTTP成功但结构校验失败时，应标记失败并降级，不能写成端到端通过。
 - 密钥问题、额度不足、超时等均需记录实际结果。不要通过前端或API返回密钥、原始错误体。
+
+生产站点：https://insightx-investment-research-yeht.vercel.app 。GitHub 仓库更新会触发自动构建；环境变量变更后应重新部署。
 
 ## 当前运行边界
 

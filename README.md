@@ -1,6 +1,6 @@
 # InsightX · AI 投资命题与多证据验证助手
 
-面向需要快速检验投资判断的投研人员与 AI 产品经理的案例版工作台。公开演示：[InsightX](https://insightx-research-2026.fresh-stork-7604.chatgpt.site)。目前只支持“宁德时代 2025 年利润增长主要来自主营改善而非一次性收益”这一类命题；其他标的、年份及相反主张会显示证据不足。不能据此作投资决策。
+面向需要快速检验投资判断的投研人员与 AI 产品经理的案例版工作台。公开演示：[InsightX](https://insightx-investment-research-yeht.vercel.app)。目前只支持“宁德时代 2025 年利润增长主要来自主营改善而非一次性收益”这一类命题；其他标的、年份及相反主张会显示证据不足。不能据此作投资决策。
 
 ## 使用流程与架构
 
@@ -13,7 +13,7 @@ Next.js 15、React 19、TypeScript。主流程在 `POST /api/research` 中顺序
 - `GET /api/financials` 优先由服务端调用扶摇年度利润表：`thscode=300750.SZ&period=annual&limit=4`。校验 `code=0`、标的、年度与关键字段；2024/2025 年数值按元转千元后用于计算。只有本次成功才标为「本次接口调用」。未配置密钥或失败时标为「历史数据」，并显示原因。
 - `data/catl-annual-report-2025.json` 是人工摘录的 [宁德时代 2025 年年报](https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF) 历史数据，不是扶摇原始响应。纸面第 11 页为主要指标，第 12—13 页为非经常性损益，第 117 页为利润表，第 195 页为主营收入和成本。每张证据卡有年份、来源与原文入口。
 - 扶摇利润表不含扣非归母净利润，始终取自年报。同比、增量、占比由程序计算。扣非利润与主营业务利润不等价；缺少费用、投资收益、税负及少数股东损益的完整桥接，只能给出有限支持。
-- 用户此前提供了完整的 2022—2025 扶摇 JSON；本仓库未取得可逐字段核对的原始正文，故没有把年报摘录伪装为该 JSON 缓存。原响应标识 `request_id=3b706613735540ed825ab502e245eb2c` 仅用于后续核对，不构成已保存原文。线上尚未配置密钥、尚未验证真实请求。
+- 用户此前提供了完整的 2022—2025 扶摇 JSON；本仓库未取得可逐字段核对的原始正文，故没有把年报摘录伪装为该 JSON 缓存。原响应标识 `request_id=3b706613735540ed825ab502e245eb2c` 仅用于后续核对，不构成已保存原文。2026-10-15 线上 Vercel 已配置密钥并完成真实请求；具体时间、状态码、返回年份与字段摘要见 TESTING.md。仓库不保存密钥或扶摇完整原始响应。
 
 ## 本地启动与安全配置
 
@@ -25,8 +25,8 @@ Next.js 15、React 19、TypeScript。主流程在 `POST /api/research` 中顺序
 
 `GET /api/financials` 返回数据模式、来源、时间、记录和接口状态。`POST /api/research` 接收 `{ "claim": "..." }`，返回研究结构和本次财务数据状态。详见 [TESTING.md](TESTING.md)、[AI_USAGE.md](AI_USAGE.md) 与 [DEMO_SCRIPT.md](DEMO_SCRIPT.md)。
 
-百炼北京地域部署步骤见 [DEPLOYMENT.md](DEPLOYMENT.md)。调用记录包含提供方、模型、请求时间、HTTP状态、耗时和响应ID，不含密钥。配置完成前不声称真实模型调用成功。
+百炼北京地域部署步骤见 [DEPLOYMENT.md](DEPLOYMENT.md)。调用记录包含提供方、模型、请求时间、HTTP状态、耗时和响应ID，不含密钥。2026-10-15 线上千问 qwen-plus 已真实调用成功并通过结构校验；详情见 TESTING.md。
 
 源码仓库：[insightx-investment-research](https://github.com/gcc20200713-creator/insightx-investment-research)。
 
-当前边界：仅单一标的和年度案例；财务 API 和模型 API 的真实线上调用尚待服务端密钥；没有跨设备保存、完整利润桥接或泛化 Agent 工具规划。GitHub 仓库状态以交付清单为准。
+当前边界：仅单一标的和年度案例；财务 API 和模型 API 已完成一次真实线上调用；没有跨设备保存、完整利润桥接或泛化 Agent 工具规划。部署于 Vercel 的生产域名可匿名访问。
